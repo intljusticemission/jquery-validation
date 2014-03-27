@@ -2,19 +2,18 @@
   "name": "jquery-validation",
   "title": "jQuery Validation Plugin",
   "description": "Form validation made easy",
-  "version": "1.12.0pre",
+  "version": "1.12.0",
   "homepage": "http://jqueryvalidation.org/",
   "author": {
     "name": "Jörn Zaefferer",
-    "email": "joern.zaefferer@gmail.com",
     "url": "http://bassistance.de"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jzaefferer/jquery-validation.git"
+    "url": "git://github.com/intljusticemission/jquery-validation.git"
   },
   "bugs": {
-    "url": "https://github.com/jzaefferer/jquery-validation/issues"
+    "url": "https://github.com/intljusticemission/jquery-validation/"
   },
   "licenses": [
     {
