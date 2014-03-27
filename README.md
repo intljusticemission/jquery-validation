@@ -1,61 +1,37 @@
 [jQuery Validation Plugin](http://jqueryvalidation.org/) - Form validation made easy
 ================================
 
-[![Build Status](https://secure.travis-ci.org/jzaefferer/jquery-validation.png)](http://travis-ci.org/jzaefferer/jquery-validation)
-[![devDependency Status](https://david-dm.org/jzaefferer/jquery-validation/dev-status.png?theme=shields.io)](https://david-dm.org/jzaefferer/jquery-validation#info=devDependencies)
+This fork adds better async support to jquery validation, while also removing some of the ancient
+compatibility cruft (do we really still need to polyfil event delegation???)
 
-The jQuery Validation Plugin provides drop-in validation for your existing forms, while making all kinds of customizations to fit your application really easy.
+## Changes
 
-## [Help the project](http://pledgie.com/campaigns/18159)
+Adds a few new Validator instance methods, and adds overloads for the `jQuery.fn` methods.
+Makes use of Petka's wonderful [Bluebird](https://github.com/mdevils/node-jscs/blob/master/lib/presets/jquery.json) library internally 
+to ensure async behaviour. When using the async methods, remember that they never return syncronously.
 
-[![Help the project](http://www.pledgie.com/campaigns/18159.png?skin_name=chrome)](http://pledgie.com/campaigns/18159)
+### Validator
 
-This project is looking for help! [You can donate to the ongoing pledgie campaign](http://pledgie.com/campaigns/18159)
-and help spread the word. If you've used the plugin, or plan to use, consider a donation - any amount will help.
+_Overloads_
 
-You can find the plan for how to spend the money on the [pledgie page](http://pledgie.com/campaigns/18159).
+- `form(callback)`
 
-## Getting Started
+_New Methods_ 
 
-### Downloading the prebuilt files
+- `checkAsync(callback)`
+- `checkFormAsync(callback)`
+- `elementAsync(callback)`
+- `elementAsync(callback)`
 
-Prebuilt files can be downloaded from http://jqueryvalidation.org/
+### $.fn Overload
 
-### Downloading the latest changes
+use like the original methods, they will function like the sync versions unless 
+you pass in a callback ex:
 
-The unreleased development files can be obtained by:
+	$('form').valid(function(err, valid){
+		console.log(valid) // => true | false
+	})
 
- 1. [Downloading](https://github.com/jzaefferer/jquery-validation/archive/master.zip) or Forking this repository
- 2. [Setup the build](CONTRIBUTING.md#build-setup)
- 3. Run `grunt` to create the built files in the "dist" directory
-
-### Including it on your page
-
-Include jQuery and the plugin on a page. Then select a form to validate and call the `validate` method.
-
-```html
-<form>
-	<input required>
-</form>
-<script src="jquery.js"></script>
-<script src="jquery.validation.js"></script>
-<script>
-$("form").validate();
-</script>
-```
-
-For more information on how to setup a rules and customizations, [check the documentation](http://jqueryvalidation.org/documentation/).
-
-## Reporting an Issue
-
-1. Make sure the problem you're addressing is reproducible.
-2. Use http://jsbin.com or http://jsfiddle.net to provide a test page.
-3. Indicate what browsers the issue can be reproduced in. **Note: IE Compatibilty modes issues will not be addressed.**
-4. What version of the plug-in is the issue reproducible in. Is it reproducible after updating to the latest version.
-
-## Contributing
-
-See the [Contributing Guide](CONTRIBUTING.md)
 
 ## License
 Copyright (c) 2013 Jörn Zaefferer

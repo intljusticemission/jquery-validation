@@ -36,36 +36,32 @@ $.extend($.fn, {
 
 		if ( validator.settings.onsubmit ) {
 
-			this.validateDelegate( ":submit", "click", function( event ) {
+			this.on("click.validate", ":submit", function (ev) {
 				if ( validator.settings.submitHandler ) {
-					validator.submitButton = event.target;
+					validator.submitButton = ev.target;
 				}
 				// allow suppressing validation by adding a cancel class to the submit button
-				if ( $(event.target).hasClass("cancel") ) {
-					validator.cancelSubmit = true;
-				}
-
-				// allow suppressing validation by adding the html5 formnovalidate attribute to the submit button
-				if ( $(event.target).attr("formnovalidate") !== undefined ) {
+				if ( $(ev.target).hasClass('cancel') ) {
 					validator.cancelSubmit = true;
 				}
 			});
 
 			// validate the form on submit
-			this.submit( function( event ) {
+			this.on('submit.validate', function( event ) {
 				if ( validator.settings.debug ) {
 					// prevent form submit to be able to see console output
 					event.preventDefault();
 				}
+
 				function handle() {
 					var hidden;
 					if ( validator.settings.submitHandler ) {
-						if ( validator.submitButton ) {
+						if (validator.submitButton) {
 							// insert a hidden input as a replacement for the missing submit button
-							hidden = $("<input type='hidden'/>").attr("name", validator.submitButton.name).val( $(validator.submitButton).val() ).appendTo(validator.currentForm);
+							hidden = $("<input type='hidden'/>").attr("name", validator.submitButton.name).val(validator.submitButton.value).appendTo(validator.currentForm);
 						}
 						validator.settings.submitHandler.call( validator, validator.currentForm, event );
-						if ( validator.submitButton ) {
+						if (validator.submitButton) {
 							// and clean up afterwards; thanks to no-block-scope, hidden can be referenced
 							hidden.remove();
 						}
@@ -342,24 +338,24 @@ $.extend($.validator, {
 			});
 
 			function delegate(event) {
-				var validator = $.data(this[0].form, "validator"),
-					eventType = "on" + event.type.replace(/^validate/, ""),
-					settings = validator.settings;
-				if ( settings[eventType] && !this.is( settings.ignore ) ) {
-					settings[eventType].call(validator, this[0], event);
+				var validator = $.data(this.form, "validator"),
+					eventType = "on" + event.type.replace(/^validate/, "");
+
+				if (validator.settings[eventType]) {
+					validator.settings[eventType].call(validator, this, event);
 				}
 			}
-			$(this.currentForm)
-				.validateDelegate(":text, [type='password'], [type='file'], select, textarea, " +
+
+		    $(this.currentForm).on('"focusin.validate focusout.validate keyup.validate',
+                    ":text, [type='password'], [type='file'], select, textarea, " +
 					"[type='number'], [type='search'] ,[type='tel'], [type='url'], " +
 					"[type='email'], [type='datetime'], [type='date'], [type='month'], " +
 					"[type='week'], [type='time'], [type='datetime-local'], " +
-					"[type='range'], [type='color'] ",
-					"focusin focusout keyup", delegate)
-				.validateDelegate("[type='radio'], [type='checkbox'], select, option", "click", delegate);
+					"[type='range'], [type='color'] ", delegate)
+				.on("click.validate", "[type='radio'], [type='checkbox'], select, option", delegate);
 
-			if ( this.settings.invalidHandler ) {
-				$(this.currentForm).bind("invalid-form.validate", this.settings.invalidHandler);
+			if (this.settings.invalidHandler) {
+				$(this.currentForm).on("invalid-form.validate", this.settings.invalidHandler);
 			}
 
 			// Add aria-required to any Static/Data/Class required fields before first validation
@@ -815,13 +811,14 @@ $.extend($.validator, {
 		},
 
 		startRequest: function( element ) {
+
 			if ( !this.pending[element.name] ) {
 				this.pendingRequest++;
 				this.pending[element.name] = true;
 			}
 		},
 
-		stopRequest: function( element, valid ) {
+        stopRequest: function( element, valid ) {
 			this.pendingRequest--;
 			// sometimes synchronization fails, make sure pendingRequest is never < 0
 			if ( this.pendingRequest < 0 ) {
@@ -1230,13 +1227,9 @@ $.extend($.validator, {
 			}, param));
 			return "pending";
 		}
-
 	}
 
 });
 
-$.format = function deprecated() {
-	throw "$.format has been deprecated. Please use $.validator.format instead.";
-};
 
 }(jQuery));

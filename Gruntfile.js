@@ -110,6 +110,8 @@ grunt.loadNpmTasks("grunt-jscs-checker");
 
 grunt.registerTask("default", ["concat", "jscs", "jshint", "qunit"]);
 grunt.registerTask("release", ["default", "uglify", "compress"]);
+
+grunt.registerTask("async", ["concat", "uglify", "compress"]);
 grunt.registerTask("start", ["concat", "watch"]);
 
 };
